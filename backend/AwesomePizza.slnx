@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/AwesomePizza.Api/AwesomePizza.Api.csproj" />
+  <Project Path="tests/AwesomePizza.Tests/AwesomePizza.Tests.csproj" />
+</Solution>
