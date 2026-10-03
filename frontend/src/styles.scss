@@ -10,8 +10,7 @@ html {
   @include mat.theme(
     (
       color: (
-        primary: mat.$rose-palette,
-        tertiary: mat.$red-palette,
+        primary: mat.$red-palette,
       ),
       typography: Roboto,
       density: 0,
@@ -29,6 +28,8 @@ body {
   // Angular Material's system-level CSS variables. Learn more about these
   // variables at https://material.angular.dev/guide/system-variables
   background-color: var(--mat-sys-surface);
+  background-image: url('/background.jpeg');
+  background-size: 600px;
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
 
@@ -37,3 +38,14 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+// The snackbar panel gets the "success" or "error" class from CcSnackbarService
+.mat-mdc-snack-bar-container.success {
+  --mat-snack-bar-container-color: #2e7d32;
+  --mat-snack-bar-supporting-text-color: #fff;
+}
+
+.mat-mdc-snack-bar-container.error {
+  --mat-snack-bar-container-color: var(--mat-sys-error);
+  --mat-snack-bar-supporting-text-color: var(--mat-sys-on-error);
+}

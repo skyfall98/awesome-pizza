@@ -12,7 +12,14 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@dtos/*": ["./src/app/dtos/*"],
+      "@enums/*": ["./src/app/enums/*"],
+      "@services/*": ["./src/app/services/*"],
+      "@environments/*": ["./src/environments/*"],
+      "@common-components/*": ["./src/app/common-components/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
