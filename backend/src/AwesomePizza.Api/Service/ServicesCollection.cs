@@ -37,7 +37,6 @@ public static class ServicesCollection
         services.AddScoped<IKitchenService, KitchenService>();
         services.AddScoped<IOrderNotifier, OrderNotifier>();
 
-        services.AddSingleton(TimeProvider.System);
         services.Configure<OrderCleanupSettings>(configuration.GetSection(OrderCleanupSettings.SectionName));
         services.AddScoped<IOrderCleanupService, OrderCleanupService>();
         services.AddHostedService<OrderCleanupWorker>();

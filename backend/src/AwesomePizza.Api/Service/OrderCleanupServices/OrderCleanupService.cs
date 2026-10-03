@@ -11,20 +11,18 @@ public class OrderCleanupService: IOrderCleanupService
 {
     private readonly DatabaseContext _context;
     private readonly OrderCleanupSettings _settings;
-    private readonly TimeProvider _timeProvider;
     private readonly ILogger<OrderCleanupService> _logger;
 
-    public OrderCleanupService(DatabaseContext context, IOptions<OrderCleanupSettings> settings, TimeProvider timeProvider, ILogger<OrderCleanupService> logger)
+    public OrderCleanupService(DatabaseContext context, IOptions<OrderCleanupSettings> settings, ILogger<OrderCleanupService> logger)
     {
         _context = context;
         _settings = settings.Value;
-        _timeProvider = timeProvider;
         _logger = logger;
     }
 
     public async Task<int> DeleteExpiredOrdersAsync(CancellationToken cancellationToken)
     {
-        DateTimeOffset threshold = _timeProvider.GetUtcNow().AddDays(-_settings.RetentionDays);
+        DateTimeOffset threshold = DateTimeOffset.UtcNow.AddDays(-_settings.RetentionDays);
 
         // Only ready orders are removed: the ones still in the queue are never touched.
         // The items go away with the order thanks to the cascade delete.
