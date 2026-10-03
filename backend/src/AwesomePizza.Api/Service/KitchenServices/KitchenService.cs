@@ -3,6 +3,7 @@ using AwesomePizza.Api.DTO.OrderDTO;
 using AwesomePizza.Api.Enum;
 using AwesomePizza.Api.Exceptions;
 using AwesomePizza.Api.Model;
+using AwesomePizza.Api.Service.NotificationServices;
 
 using Mapster;
 
@@ -14,12 +15,14 @@ public class KitchenService: IKitchenService
 {
     private readonly DatabaseContext _context;
     private readonly TypeAdapterConfig _mapsterConfig;
+    private readonly IOrderNotifier _orderNotifier;
     private readonly ILogger<KitchenService> _logger;
 
-    public KitchenService(DatabaseContext context, TypeAdapterConfig mapsterConfig, ILogger<KitchenService> logger)
+    public KitchenService(DatabaseContext context, TypeAdapterConfig mapsterConfig, IOrderNotifier orderNotifier, ILogger<KitchenService> logger)
     {
         _context = context;
         _mapsterConfig = mapsterConfig;
+        _orderNotifier = orderNotifier;
         _logger = logger;
     }
 
@@ -82,6 +85,8 @@ public class KitchenService: IKitchenService
 
         _logger.LogInformation("Order {Code} taken by the kitchen", order.Code);
 
+        await NotifyStatusChangedAsync(order, cancellationToken);
+
         return order.Adapt<GetOrderDTO>(_mapsterConfig);
     }
 
@@ -109,6 +114,15 @@ public class KitchenService: IKitchenService
 
         _logger.LogInformation("Order {Code} completed", order.Code);
 
+        await NotifyStatusChangedAsync(order, cancellationToken);
+
         return order.Adapt<GetOrderDTO>(_mapsterConfig);
+    }
+
+    // Whoever follows this order gets the new status, the kitchen reloads its queue
+    private async Task NotifyStatusChangedAsync(Order order, CancellationToken cancellationToken)
+    {
+        await _orderNotifier.NotifyOrderStatusChangedAsync(order.Code, order.Status.ToString(), cancellationToken);
+        await _orderNotifier.NotifyQueueChangedAsync(cancellationToken);
     }
 }

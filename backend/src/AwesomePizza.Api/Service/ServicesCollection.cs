@@ -3,6 +3,7 @@ using AwesomePizza.Api.Data;
 using AwesomePizza.Api.Data.Seed;
 using AwesomePizza.Api.DTO;
 using AwesomePizza.Api.Service.KitchenServices;
+using AwesomePizza.Api.Service.NotificationServices;
 using AwesomePizza.Api.Service.OrderCleanupServices;
 using AwesomePizza.Api.Service.OrderItemServices;
 using AwesomePizza.Api.Service.OrderServices;
@@ -34,8 +35,8 @@ public static class ServicesCollection
         services.AddScoped<IOrderItemService, OrderItemService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IKitchenService, KitchenService>();
+        services.AddScoped<IOrderNotifier, OrderNotifier>();
 
-        services.AddSingleton(TimeProvider.System);
         services.Configure<OrderCleanupSettings>(configuration.GetSection(OrderCleanupSettings.SectionName));
         services.AddScoped<IOrderCleanupService, OrderCleanupService>();
         services.AddHostedService<OrderCleanupWorker>();
