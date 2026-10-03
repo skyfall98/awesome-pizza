@@ -2,6 +2,7 @@ using AwesomePizza.Api.Data;
 using AwesomePizza.Api.DTO.OrderDTO;
 using AwesomePizza.Api.Exceptions;
 using AwesomePizza.Api.Model;
+using AwesomePizza.Api.Service.NotificationServices;
 using AwesomePizza.Api.Service.OrderItemServices;
 
 using Mapster;
@@ -15,13 +16,15 @@ public class OrderService: IOrderService
     private readonly DatabaseContext _context;
     private readonly TypeAdapterConfig _mapsterConfig;
     private readonly IOrderItemService  _orderItemService;
+    private readonly IOrderNotifier _orderNotifier;
     private readonly ILogger<OrderService> _logger;
 
-    public OrderService(DatabaseContext context, TypeAdapterConfig mapsterConfig, IOrderItemService orderItemService, ILogger<OrderService> logger)
+    public OrderService(DatabaseContext context, TypeAdapterConfig mapsterConfig, IOrderItemService orderItemService, IOrderNotifier orderNotifier, ILogger<OrderService> logger)
     {
         _context = context;
         _mapsterConfig = mapsterConfig;
         _orderItemService = orderItemService;
+        _orderNotifier = orderNotifier;
         _logger = logger;
     }
 
@@ -39,6 +42,9 @@ public class OrderService: IOrderService
         await _context.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Order {Code} created", order.Code);
+
+        // The new order must show up in the kitchen queue automtically
+        await _orderNotifier.NotifyQueueChangedAsync(cancellationToken);
 
         return order.Adapt<GetOrderDTO>(_mapsterConfig);
     }
