@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace AwesomePizza.Api.Exceptions;
 
-public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IProblemDetailsService problemDetailsService): IExceptionHandler
+public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger): IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(HttpContext context, Exception exception, CancellationToken cancellationToken)
     {
@@ -21,13 +22,16 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IPro
 
         logger.LogWarning("Request failed with status {StatusCode}: {Message}", statusCode, exception.Message);
 
-        ProblemDetails problemDetails = new ProblemDetails { Status = statusCode, Detail = exception.Message };
-        ProblemDetailsContext problemDetailsContext = new ProblemDetailsContext()
+        ProblemDetails problemDetails = new ProblemDetails
         {
-            ProblemDetails = problemDetails, HttpContext = context, Exception = exception
+            Status = statusCode,
+            Title = ReasonPhrases.GetReasonPhrase(statusCode.Value),
+            Detail = exception.Message
         };
 
         context.Response.StatusCode = statusCode.Value;
-        return await problemDetailsService.TryWriteAsync(problemDetailsContext);
+        await context.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+
+        return true;
     }
 }

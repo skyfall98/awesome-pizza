@@ -15,22 +15,32 @@ public class OrderService: IOrderService
     private readonly DatabaseContext _context;
     private readonly TypeAdapterConfig _mapsterConfig;
     private readonly IOrderItemService  _orderItemService;
+    private readonly ILogger<OrderService> _logger;
 
-    public OrderService(DatabaseContext context, TypeAdapterConfig mapsterConfig)
+    public OrderService(DatabaseContext context, TypeAdapterConfig mapsterConfig, IOrderItemService orderItemService, ILogger<OrderService> logger)
     {
         _context = context;
         _mapsterConfig = mapsterConfig;
+        _orderItemService = orderItemService;
+        _logger = logger;
     }
-
 
     public async Task<GetOrderDTO> CreateOrderAsync(CreateOrderDTO createOrderDto, CancellationToken cancellationToken)
     {
-        Order order = createOrderDto.Adapt<Order>();
-        
+        List<OrderItem> orderItems = await _orderItemService.BuildOrderItemsAsync(createOrderDto.Items, cancellationToken);
+
+        Order order = new Order(OrderCodeGenerator.Generate(), 
+            createOrderDto.CustomerName, 
+            orderItems, 
+            DateTimeOffset.UtcNow);
+
+        // The items are saved together with the order
         _context.Orders.Add(order);
-        _context.SaveChanges();
-        
-        return cre
+        await _context.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("Order {Code} created", order.Code);
+
+        return order.Adapt<GetOrderDTO>(_mapsterConfig);
     }
 
     public async Task<GetOrderDTO> GetOrderByCodeAsync(string code, CancellationToken cancellationToken)

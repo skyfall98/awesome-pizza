@@ -1,6 +1,9 @@
 using AwesomePizza.Api.Data;
 using AwesomePizza.Api.Data.Seed;
 using AwesomePizza.Api.DTO;
+using AwesomePizza.Api.Service.KitchenServices;
+using AwesomePizza.Api.Service.OrderItemServices;
+using AwesomePizza.Api.Service.OrderServices;
 using AwesomePizza.Api.Service.PizzaServices;
 
 using Mapster;
@@ -25,6 +28,9 @@ public static class ServicesCollection
         services.AddSingleton(mapsterConfig);
         
         services.AddScoped<IPizzaService, PizzaService>();
+        services.AddScoped<IOrderItemService, OrderItemService>();
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IKitchenService, KitchenService>();
 
         return services;
     }
