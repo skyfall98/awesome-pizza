@@ -51,6 +51,8 @@ Also the integration tests need the database container running. They use the sam
 
 ## Project structure
 
+I used a monorepo: backend and frontend are in the same repository.
+
 ```
 backend/
   src/AwesomePizza.Api/       the API
