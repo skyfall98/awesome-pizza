@@ -7,4 +7,5 @@ export const routes: Routes = [
   { path: '', component: Order, title: 'Awesome Pizza' },
   { path: 'orders/:code', component: Tracking, title: 'Il tuo ordine' },
   { path: 'kitchen', component: Kitchen, title: 'Cucina' },
+  { path: '**', redirectTo: '' },
 ];
