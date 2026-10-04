@@ -25,7 +25,7 @@ public class PizzaSeeder
             new Pizza { PizzaId = 6, Name = "Capricciosa", Price = 8.50m },
             new Pizza { PizzaId = 7, Name = "Quattro Stagioni", Price = 8.50m },
             new Pizza { PizzaId = 8, Name = "Quattro Formaggi", Price = 8.50m },
-            new Pizza { PizzaId = 9, Name = "Budala", Price = 9.00m },
+            new Pizza { PizzaId = 9, Name = "Bufala", Price = 9.00m },
             new Pizza { PizzaId = 10, Name = "Salsiccia", Price = 8.00m }
         ];
 

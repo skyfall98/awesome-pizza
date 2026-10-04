@@ -1,0 +1,88 @@
+<div class="content">
+  <h2>Cucina</h2>
+
+  <h3>Ordine in preparazione</h3>
+
+  @if (currentOrder(); as current) {
+    <div class="summary">
+      <span>
+        Codice: <strong class="code">{{ current.code }}</strong>
+      </span>
+      <span>Cliente: {{ current.customerName ?? '-' }}</span>
+      <span>Ricevuto il: {{ current.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+    </div>
+
+    <div class="list">
+      <table mat-table [dataSource]="current.items">
+        <!-- Column: Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Pizze</th>
+          <td mat-cell *matCellDef="let element">{{ element.pizzaName }}</td>
+        </ng-container>
+
+        <!-- Column: Quantity -->
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>Quantità</th>
+          <td mat-cell *matCellDef="let element">{{ element.quantity }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="currentColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: currentColumns"></tr>
+      </table>
+    </div>
+
+    <div class="actions">
+      <button mat-flat-button [disabled]="isBusy()" (click)="complete(current.code)">
+        Ordine pronto
+      </button>
+    </div>
+  } @else {
+    <p>Nessun ordine in preparazione.</p>
+  }
+
+  <h3>In coda ({{ waitingOrders().length }})</h3>
+
+  <div class="list">
+    <table mat-table [dataSource]="waitingOrders()">
+      <!-- Column: Code -->
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef>Codice</th>
+        <td mat-cell *matCellDef="let element">{{ element.code }}</td>
+      </ng-container>
+
+      <!-- Column: Customer -->
+      <ng-container matColumnDef="customer">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let element">{{ element.customerName ?? '-' }}</td>
+      </ng-container>
+
+      <!-- Column: Pizzas -->
+      <ng-container matColumnDef="pizzas">
+        <th mat-header-cell *matHeaderCellDef>Pizze</th>
+        <td mat-cell *matCellDef="let element">{{ pizzasOf(element) }}</td>
+      </ng-container>
+
+      <!-- Column: Created at -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Ricevuto alle</th>
+        <td mat-cell *matCellDef="let element">{{ element.createdAt | date: 'HH:mm' }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="waitingColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: waitingColumns"></tr>
+      <tr mat-no-data-row *matNoDataRow>
+        <td [attr.colspan]="waitingColumns.length">Nessun ordine in coda</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="actions">
+    <button
+      mat-flat-button
+      [disabled]="isBusy() || currentOrder() !== null || waitingOrders().length === 0"
+      (click)="takeNext()"
+    >
+      Prendi il prossimo
+    </button>
+  </div>
+</div>

@@ -1,1 +1,54 @@
-<p>tracking works!</p>
+<div class="content">
+  <h2>Il tuo ordine</h2>
+
+  @if (order(); as currentOrder) {
+    <div class="summary">
+      <span>
+        Codice: <strong class="code">{{ currentOrder.code }}</strong>
+      </span>
+      @if (currentOrder.customerName) {
+        <span>Nome: {{ currentOrder.customerName }}</span>
+      }
+      <span>
+        Stato: <strong>{{ statusLabels[currentOrder.status] }}</strong>
+      </span>
+    </div>
+
+    <mat-progress-bar
+      [class.ready]="currentOrder.status === OrderStatusEnum.Ready"
+      [mode]="currentOrder.status === OrderStatusEnum.InProgress ? 'indeterminate' : 'determinate'"
+      [value]="currentOrder.status === OrderStatusEnum.Ready ? 100 : 0"
+    />
+
+    <div class="list">
+      <table mat-table [dataSource]="currentOrder.items">
+        <!-- Column: Name -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Pizze</th>
+          <td mat-cell *matCellDef="let element">{{ element.pizzaName }}</td>
+        </ng-container>
+
+        <!-- Column: Quantity -->
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef>Quantità</th>
+          <td mat-cell *matCellDef="let element">{{ element.quantity }}</td>
+        </ng-container>
+
+        <!-- Column: Price -->
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Prezzo</th>
+          <td mat-cell *matCellDef="let element">{{ element.unitPrice | currency: 'EUR' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <div class="footer">
+      <span class="total">Totale: {{ currentOrder.totalPrice | currency: 'EUR' }}</span>
+    </div>
+  } @else if (loadFailed()) {
+    <p>Ordine non trovato o non disponibile.</p>
+  }
+</div>

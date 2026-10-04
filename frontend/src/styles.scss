@@ -49,3 +49,34 @@ body {
   --mat-snack-bar-container-color: var(--mat-sys-error);
   --mat-snack-bar-supporting-text-color: var(--mat-sys-on-error);
 }
+
+// Layout shared by all the pages: a column of sections, with the tables styled like the menu
+.content {
+  display: flex;
+  flex-direction: column;
+  row-gap: 24px;
+
+  h2,
+  h3 {
+    margin: 0;
+  }
+
+  .list {
+    table {
+      --mat-table-header-headline-color: var(--mat-sys-on-primary);
+    }
+
+    tr.mat-mdc-row {
+      background-color: var(--mat-sys-surface-container-lowest);
+    }
+
+    tr.mat-mdc-header-row {
+      background-color: var(--mat-sys-primary);
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

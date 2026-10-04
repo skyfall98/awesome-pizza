@@ -5,6 +5,16 @@
   border-radius: 50%;
 }
 
+mat-toolbar {
+  --mat-toolbar-container-background-color: var(--mat-sys-primary);
+  --mat-toolbar-container-text-color: var(--mat-sys-on-primary);
+}
+
+// White panel around the content of every page
 main {
-  padding: 16px;
+  max-width: 720px;
+  margin: 16px auto;
+  padding: 24px;
+  border-radius: 16px;
+  background-color: var(--mat-sys-surface-container-lowest);
 }

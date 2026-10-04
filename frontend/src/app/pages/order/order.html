@@ -13,6 +13,7 @@
 
   <div class="list">
     <table mat-table [dataSource]="pizzas()">
+      
       <!-- Column: Name -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Pizze</th>
@@ -66,5 +67,15 @@
     >
       Ordina
     </button>
+  </div>
+
+  <h3>Segui il tuo ordine</h3>
+
+  <div class="track">
+    <mat-form-field appearance="outline">
+      <mat-label>Codice ordine</mat-label>
+      <input matInput [formControl]="trackingCode" (keydown.enter)="track()" />
+    </mat-form-field>
+    <button mat-flat-button [disabled]="!trackingCode.value.trim()" (click)="track()">Segui</button>
   </div>
 </div>

@@ -43,6 +43,8 @@ export class Order implements OnInit {
     validators: Validators.maxLength(100),
   });
 
+  public readonly trackingCode = new FormControl('', { nonNullable: true });
+
   public readonly totalPrice = computed(() =>
     this.pizzas().reduce((sum, pizza) => sum + pizza.price * this.quantityOf(pizza.pizzaId), 0),
   );
@@ -87,5 +89,12 @@ export class Order implements OnInit {
       next: (order) => this._router.navigate(['orders', order.code]),
       error: () => this.isSubmitting.set(false),
     });
+  }
+
+  track() {
+    const code = this.trackingCode.value.trim();
+    if (code) {
+      this._router.navigate(['orders', code]);
+    }
   }
 }
