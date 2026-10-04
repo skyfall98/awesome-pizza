@@ -1,6 +1,6 @@
 using AwesomePizza.Api.Model;
 
-namespace AwesomePizza.Tests.Model;
+namespace AwesomePizza.Tests.Unit;
 
 public class OrderItemTests
 {

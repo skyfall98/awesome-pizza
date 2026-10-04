@@ -1,7 +1,7 @@
 using AwesomePizza.Api.Enum;
 using AwesomePizza.Api.Model;
 
-namespace AwesomePizza.Tests.Model;
+namespace AwesomePizza.Tests.Unit;
 
 public class OrderTests
 {
