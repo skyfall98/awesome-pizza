@@ -25,7 +25,11 @@ export class SignalrService {
 
   private readonly _connection = new signalR.HubConnectionBuilder()
     .withUrl(environment.apiUrls.hub)
-    .withAutomaticReconnect([0, 2000, 5000, 10000])
+    // Never give up while the page is open: quick retries first, then one every 10 seconds
+    .withAutomaticReconnect({
+      nextRetryDelayInMilliseconds: (context) =>
+        [0, 2000, 5000][context.previousRetryCount] ?? 10000,
+    })
     .build();
 
   // one subject per event, created the first time a page listens to it

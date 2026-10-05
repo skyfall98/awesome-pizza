@@ -130,9 +130,9 @@ To be honest for a single pizzeria it's not really necessary: also with 100 orde
 
 ### Tests
 
-The assignment asks for unit tests, and mine cover the domain without database: order transitions and total, the price snapshot and the format of the order code.
+The assignment asks for unit tests, and mine cover the domain without database: order transitions and total, the price snapshot and the format of the order code. There are also unit tests for the validation of the order lines (`OrderItemService`), with a fake `IPizzaService` instead of the database.
 
-They don't cover services and controllers, that use the `DbContext` directly and have most of their logic in the queries and in the database constraints. For this reason, also if it wasn't required, I added integration tests with `WebApplicationFactory` on a real SQL Server database. They test order creation and tracking, the FIFO queue, the 409 errors, concurrent requests and the cleanup job.
+The other services and the controllers don't have unit tests: they use the `DbContext` directly and have most of their logic in the queries and in the database constraints. For this reason, also if it wasn't required, I added integration tests with `WebApplicationFactory` on a real SQL Server database. They test order creation and tracking, the FIFO queue, the 409 errors, concurrent requests and the cleanup job.
 
 ### Angular and Angular Material
 
